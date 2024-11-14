@@ -1,0 +1,324 @@
+[
+  {
+    "objectID": "index.html#who-am-i",
+    "href": "index.html#who-am-i",
+    "title": "What’s new with tidymodels?",
+    "section": "👋 Who am I?",
+    "text": "👋 Who am I?\n\n\n\n\n\n \n\n \n\n\n\n\n\nhttps://hfrick.github.io/2024-LondonR"
+  },
+  {
+    "objectID": "index.html#who-are-we",
+    "href": "index.html#who-are-we",
+    "title": "What’s new with tidymodels?",
+    "section": "👋 Who are we?",
+    "text": "👋 Who are we?"
+  },
+  {
+    "objectID": "index.html#whats-new-with-tidymodels",
+    "href": "index.html#whats-new-with-tidymodels",
+    "title": "What’s new with tidymodels?",
+    "section": "What’s new with tidymodels?",
+    "text": "What’s new with tidymodels?\n\n\nNew and released\nNew and in progress"
+  },
+  {
+    "objectID": "index.html#time-to-event-data",
+    "href": "index.html#time-to-event-data",
+    "title": "What’s new with tidymodels?",
+    "section": "Time-to-event data",
+    "text": "Time-to-event data\nTime-to-event data consists of two aspects: the time to and the event itself. We may or may not observe the event, leading to potentially censored observations.\nCensored regression is now supported across the framework with various models and corresponding performance metrics."
+  },
+  {
+    "objectID": "index.html#time-to-event-data-1",
+    "href": "index.html#time-to-event-data-1",
+    "title": "What’s new with tidymodels?",
+    "section": "Time-to-event data",
+    "text": "Time-to-event data\nThe introduction to time-to-event data and models:\ntidymodels for time-to-event data by yours truely at posit::conf(2024)\nThe details of measuring performance for time-to-event models:\nEvaluation time-to-event models is hard by Max at posit::conf(2024)"
+  },
+  {
+    "objectID": "index.html#fairness",
+    "href": "index.html#fairness",
+    "title": "What’s new with tidymodels?",
+    "section": "Fairness",
+    "text": "Fairness\ntidymodels includes metrics to support your thinking around fairness.\nFair machine learning by Simon at posit::conf(2024)"
+  },
+  {
+    "objectID": "index.html#prediction-in-databases",
+    "href": "index.html#prediction-in-databases",
+    "title": "What’s new with tidymodels?",
+    "section": "Prediction in databases",
+    "text": "Prediction in databases\nThe tidypredict package let’s you calculate predictions from a parsnip model, in a database.\nThe new orbital package let’s you do that from a workflow, including workflows with a recipe.\ntidypredict with recipes by Emil at posit::conf(2024)"
+  },
+  {
+    "objectID": "index.html#deliveries-data",
+    "href": "index.html#deliveries-data",
+    "title": "What’s new with tidymodels?",
+    "section": "Deliveries data",
+    "text": "Deliveries data\n\ndata(deliveries)\n\ndeliveries\n#&gt; # A tibble: 10,012 × 31\n#&gt;    time_to_delivery  hour day   distance item_01 item_02 item_03\n#&gt;               &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt;    &lt;dbl&gt;   &lt;int&gt;   &lt;int&gt;   &lt;int&gt;\n#&gt;  1             16.1  11.9 Thu       3.15       0       0       2\n#&gt;  2             22.9  19.2 Tue       3.69       0       0       0\n#&gt;  3             30.3  18.4 Fri       2.06       0       0       0\n#&gt;  4             33.4  15.8 Thu       5.97       0       0       0\n#&gt;  5             27.2  19.6 Fri       2.52       0       0       0\n#&gt;  6             19.6  13.0 Sat       3.35       1       0       0\n#&gt;  7             22.1  15.5 Sun       2.46       0       0       1\n#&gt;  8             26.6  17.0 Thu       2.21       0       0       1\n#&gt;  9             30.8  16.7 Fri       2.62       0       0       0\n#&gt; 10             17.4  11.9 Sun       2.75       0       2       1\n#&gt; # ℹ 10,002 more rows\n#&gt; # ℹ 24 more variables: item_04 &lt;int&gt;, item_05 &lt;int&gt;, item_06 &lt;int&gt;,\n#&gt; #   item_07 &lt;int&gt;, item_08 &lt;int&gt;, item_09 &lt;int&gt;, item_10 &lt;int&gt;,\n#&gt; #   item_11 &lt;int&gt;, item_12 &lt;int&gt;, item_13 &lt;int&gt;, item_14 &lt;int&gt;,\n#&gt; #   item_15 &lt;int&gt;, item_16 &lt;int&gt;, item_17 &lt;int&gt;, item_18 &lt;int&gt;,\n#&gt; #   item_19 &lt;int&gt;, item_20 &lt;int&gt;, item_21 &lt;int&gt;, item_22 &lt;int&gt;,\n#&gt; #   item_23 &lt;int&gt;, item_24 &lt;int&gt;, item_25 &lt;int&gt;, item_26 &lt;int&gt;, …"
+  },
+  {
+    "objectID": "index.html#deliveries-data-1",
+    "href": "index.html#deliveries-data-1",
+    "title": "What’s new with tidymodels?",
+    "section": "Deliveries data",
+    "text": "Deliveries data\n\n# split into training and testing sets\nset.seed(1)\ndelivery_split &lt;- initial_split(deliveries)\ndelivery_train &lt;- training(delivery_split)\ndelivery_test  &lt;- testing(delivery_split)\n\n# resample the training set using 10-fold cross-validation\nset.seed(1)\ndelivery_folds &lt;- vfold_cv(delivery_train)"
+  },
+  {
+    "objectID": "index.html#a-baaaad-model",
+    "href": "index.html#a-baaaad-model",
+    "title": "What’s new with tidymodels?",
+    "section": "A baaaad model",
+    "text": "A baaaad model\n\ndelivery_wflow &lt;- workflow() %&gt;%\n  add_formula(time_to_delivery ~ .) %&gt;%\n  add_model(boost_tree(mode = \"regression\", trees = 3))"
+  },
+  {
+    "objectID": "index.html#a-baaaad-model-1",
+    "href": "index.html#a-baaaad-model-1",
+    "title": "What’s new with tidymodels?",
+    "section": "A baaaad model",
+    "text": "A baaaad model\n\nset.seed(1)\ndelivery_res &lt;- fit_resamples(\n    delivery_wflow, \n    delivery_folds, \n    control = control_resamples(save_pred = TRUE)\n  )"
+  },
+  {
+    "objectID": "index.html#what-is-your-metric-measuring",
+    "href": "index.html#what-is-your-metric-measuring",
+    "title": "What’s new with tidymodels?",
+    "section": "What is your metric measuring?",
+    "text": "What is your metric measuring?\n\ncollect_metrics(delivery_res)\n#&gt; # A tibble: 2 × 6\n#&gt;   .metric .estimator  mean     n std_err .config             \n#&gt;   &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               \n#&gt; 1 rmse    standard   9.52     10 0.0533  Preprocessor1_Model1\n#&gt; 2 rsq     standard   0.853    10 0.00357 Preprocessor1_Model1"
+  },
+  {
+    "objectID": "index.html#but-what-about-calibration",
+    "href": "index.html#but-what-about-calibration",
+    "title": "What’s new with tidymodels?",
+    "section": "But what about calibration?",
+    "text": "But what about calibration?\n\nlibrary(probably)\n\ncollect_predictions(delivery_res) %&gt;%\n  cal_plot_regression(truth = time_to_delivery, estimate = .pred)"
+  },
+  {
+    "objectID": "index.html#post-processing-model-predictions",
+    "href": "index.html#post-processing-model-predictions",
+    "title": "What’s new with tidymodels?",
+    "section": "Post-processing model predictions",
+    "text": "Post-processing model predictions\nWhy\n\nImprove predictive performance\nBetter satisfy distributional limitations\n\n\nHow\n\nCurrently: via probably or dplyr\nComing: Include specification in workflow object"
+  },
+  {
+    "objectID": "index.html#meet-tailor",
+    "href": "index.html#meet-tailor",
+    "title": "What’s new with tidymodels?",
+    "section": "Meet tailor 👋",
+    "text": "Meet tailor 👋\nThe tailor package introduces tailor objects, which compose iterative adjustments to model predictions.\n\ntailor is to postprocessing as recipes is to preprocessing."
+  },
+  {
+    "objectID": "index.html#meet-tailor-1",
+    "href": "index.html#meet-tailor-1",
+    "title": "What’s new with tidymodels?",
+    "section": "Meet tailor 👋",
+    "text": "Meet tailor 👋\n\n\n\n\n\n\n\n\n\n\n\n\nTool\nApplied to...\nInitialize with...\nComposes...\nTrain with...\nPredict with...\n\n\n\n\nrecipes\nTraining data\nrecipe()\nstep_*()s\nprep()\nbake()\n\n\ntailor\nModel predictions\ntailor()\nadjust_*()ments\nfit()\npredict()"
+  },
+  {
+    "objectID": "index.html#tailor-with-a-workflow",
+    "href": "index.html#tailor-with-a-workflow",
+    "title": "What’s new with tidymodels?",
+    "section": "tailor with a workflow",
+    "text": "tailor with a workflow\n\nlibrary(tailor)\n\ndelivery_tlr &lt;- tailor() %&gt;% \n    adjust_numeric_calibration()\n\ndelivery_wflow_improved &lt;- delivery_wflow %&gt;%\n  add_tailor(delivery_tlr)"
+  },
+  {
+    "objectID": "index.html#section",
+    "href": "index.html#section",
+    "title": "What’s new with tidymodels?",
+    "section": "",
+    "text": "set.seed(1)\ndelivery_res_improved &lt;- fit_resamples(\n    delivery_wflow_improved, \n    delivery_folds, \n    control = control_resamples(save_pred = TRUE)\n  )"
+  },
+  {
+    "objectID": "index.html#section-1",
+    "href": "index.html#section-1",
+    "title": "What’s new with tidymodels?",
+    "section": "",
+    "text": "collect_predictions(delivery_res_improved) %&gt;%\n  cal_plot_regression(truth = time_to_delivery, estimate = .pred)"
+  },
+  {
+    "objectID": "index.html#post-processing-via-tailor",
+    "href": "index.html#post-processing-via-tailor",
+    "title": "What’s new with tidymodels?",
+    "section": "Post-processing via tailor",
+    "text": "Post-processing via tailor\n\nFor probabilities: calibration\nFor transformation of probabilities to hard class predictions: thresholds, equivocal zones\nFor numeric outcomes: calibration, range"
+  },
+  {
+    "objectID": "index.html#post-processing-in-tidymodels",
+    "href": "index.html#post-processing-in-tidymodels",
+    "title": "What’s new with tidymodels?",
+    "section": "Post-processing in tidymodels",
+    "text": "Post-processing in tidymodels\nImplemented:\n\ntailor\nSupport in workflows\nSupport via tune::fit_resamples()\nSupport via rsample for some resamples\n\n\nTo come:\n\nSupport via rsample for the rest of the resamples\nTuning parameters via tune"
+  },
+  {
+    "objectID": "index.html#sparse-data",
+    "href": "index.html#sparse-data",
+    "title": "What’s new with tidymodels?",
+    "section": "Sparse data",
+    "text": "Sparse data\nWhen creating indicators for categorical variables, tokenizing text, or with graph datasets, you can easily end up with a lot of variables – and a lot of zeros within them.\n\nThe information in that data is rather sparse."
+  },
+  {
+    "objectID": "index.html#challenges",
+    "href": "index.html#challenges",
+    "title": "What’s new with tidymodels?",
+    "section": "Challenges",
+    "text": "Challenges\nThis can be challenging in terms of memory and speed.\n\nAddress this via a different data representation."
+  },
+  {
+    "objectID": "index.html#default-dense-representation",
+    "href": "index.html#default-dense-representation",
+    "title": "What’s new with tidymodels?",
+    "section": "Default: dense representation",
+    "text": "Default: dense representation\n\n\n\nc(100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 42, 0, 0, 0)\n\n\n\nStore all 25 values."
+  },
+  {
+    "objectID": "index.html#sparse-representation",
+    "href": "index.html#sparse-representation",
+    "title": "What’s new with tidymodels?",
+    "section": "Sparse representation",
+    "text": "Sparse representation\n\n\n\nc(100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 42, 0, 0, 0)\n\n\n\n\nOnly 5 values necessary:\n\n1 for the length: 25\n2 for the locations of the non-zero values: 1, 22\n2 for the non-zero values: 100, 42"
+  },
+  {
+    "objectID": "index.html#sparsity-in-r",
+    "href": "index.html#sparsity-in-r",
+    "title": "What’s new with tidymodels?",
+    "section": "Sparsity in R",
+    "text": "Sparsity in R\nThe Matrix package implements sparse matrices and sparse vectors along with efficient matrix operations.\n\nlibrary(Matrix)\n\nsparse_vec &lt;- sparseVector(c(100, 42), i = c(1, 22), length = 25)\nsparse_vec\n#&gt; sparse vector (nnz/length = 2/25) of class \"dsparseVector\"\n#&gt;  [1] 100   .   .   .   .   .   .   .   .   .   .   .   .   .   .   .\n#&gt; [17]   .   .   .   .   .  42   .   .   .\n\n\nmake matrix, send to model fitting engine"
+  },
+  {
+    "objectID": "index.html#sparsity-in-tidymodels",
+    "href": "index.html#sparsity-in-tidymodels",
+    "title": "What’s new with tidymodels?",
+    "section": "Sparsity in tidymodels",
+    "text": "Sparsity in tidymodels\n\ntibble(y = 1:25, x = sparse_vec)\n#&gt; Error in `tibble()`:\n#&gt; ! All columns in a tibble must be vectors.\n#&gt; ✖ Column `x` is a `dsparseVector` object.\n\n\n\n\n\nWhat are we doing, what are we not doing, and why?"
+  },
+  {
+    "objectID": "index.html#sparsity-in-tidymodels-1",
+    "href": "index.html#sparsity-in-tidymodels-1",
+    "title": "What’s new with tidymodels?",
+    "section": "Sparsity in tidymodels",
+    "text": "Sparsity in tidymodels\nGoals:\n\nPreserve existing sparsity across the framework\nMake use of (i.e. add) sparsity where beneficial\nMake things “easy”, e.g., let you (and us) use dplyr verbs\n\n\n➔ We want sparse vectors in a tibble.\n\n\ntibbles can traverse the framework\nsparsity on a predictor level -&gt; sparsity in vector\nnot Matrix but ALTREP"
+  },
+  {
+    "objectID": "index.html#welcome-sparsevctrs",
+    "href": "index.html#welcome-sparsevctrs",
+    "title": "What’s new with tidymodels?",
+    "section": "Welcome sparsevctrs",
+    "text": "Welcome sparsevctrs\n\n\n\npkg can be used on its own\nnot a Matrix replacement, no matrix operations\nallows for “sparse tibbles”, can convert those to Matrix for engines"
+  },
+  {
+    "objectID": "index.html#sparse-tibbles-in-tidymodels",
+    "href": "index.html#sparse-tibbles-in-tidymodels",
+    "title": "What’s new with tidymodels?",
+    "section": "Sparse tibbles in tidymodels",
+    "text": "Sparse tibbles in tidymodels\n\nImplemented:\n\nrecipes: recipe(), prep(), and bake()\nparsnip: fit_xy() (based on engine) and predict()\nworkflows: fit() (with a recipe) and predict()\n\n\n\n\nTo come: recipe steps\n\n\n\n\nMaaaybe: formula interface for parsnip (via fit()) and workflows (via add_formula())\n\n\nWhere this is really intersting: in preprocessing!"
+  },
+  {
+    "objectID": "index.html#books-in-progress",
+    "href": "index.html#books-in-progress",
+    "title": "What’s new with tidymodels?",
+    "section": "Books in progress",
+    "text": "Books in progress\n\nMax - Applied Machine Learning for Tabular Data: https://aml4td.org/\nEmil - Feature Engineering A-Z: https://feaz-book.com/\nSimon - Efficient Machine Learning with R: https://emlwr.org/"
+  },
+  {
+    "objectID": "index.html#where-to-get-the-news",
+    "href": "index.html#where-to-get-the-news",
+    "title": "What’s new with tidymodels?",
+    "section": "Where to get the news",
+    "text": "Where to get the news\n\nAnnouncements on https://www.tidyverse.org/blog/\nDetailed articles on https://www.tidymodels.org/"
+  },
+  {
+    "objectID": "index.html#when-your-recipe-fails-previously",
+    "href": "index.html#when-your-recipe-fails-previously",
+    "title": "What’s new with tidymodels?",
+    "section": "When your recipe fails, previously",
+    "text": "When your recipe fails, previously\nlibrary(recipes)\n\ndata(\"ames\", package = \"modeldata\")\n\nrecipe(~., data = ames) |&gt;\n  step_novel(Neighborhood, new_level = \"Gilbert\") |&gt;\n  prep()\n#&gt; Error in `prep()`:\n#&gt; ! Columns already contain the new level: Neighborhood\n\nhttps://github.com/tidymodels/recipes/pull/1069"
+  },
+  {
+    "objectID": "index.html#when-your-recipe-fails-now",
+    "href": "index.html#when-your-recipe-fails-now",
+    "title": "What’s new with tidymodels?",
+    "section": "When your recipe fails, now",
+    "text": "When your recipe fails, now\n\nlibrary(recipes)\n\ndata(\"ames\", package = \"modeldata\")\n\nrecipe(~., data = ames) |&gt;\n  step_novel(Neighborhood, new_level = \"Gilbert\") |&gt;\n  prep()\n#&gt; Error in `step_novel()`:\n#&gt; Caused by error in `prep()`:\n#&gt; ! Columns already contain the new level: Neighborhood.\n\n\nhttps://github.com/tidymodels/recipes/pull/1069"
+  },
+  {
+    "objectID": "index.html#what-makes-an-error-helpful",
+    "href": "index.html#what-makes-an-error-helpful",
+    "title": "What’s new with tidymodels?",
+    "section": "What makes an error helpful?",
+    "text": "What makes an error helpful?\n\nWhat happened?\nWhere did it happen?\nWhy did it happen?\nHow to fix it?"
+  },
+  {
+    "objectID": "index.html#what-happened",
+    "href": "index.html#what-happened",
+    "title": "What’s new with tidymodels?",
+    "section": "What happened?",
+    "text": "What happened?\n\ntime_to_water &lt;- function(plant) {\n  if (!is.character(plant)) {\n    rlang::abort(\"`plant` must be a string.\")\n  }\n  msg &lt;- paste(\"All good, the\", plant, \"doesn't need to be watered yet.\")\n  cat(paste0(msg, \"\\n\"))\n}\n\ntime_to_water(5)\n#&gt; Error in `time_to_water()`:\n#&gt; ! `plant` must be a string."
+  },
+  {
+    "objectID": "index.html#what-happened-1",
+    "href": "index.html#what-happened-1",
+    "title": "What’s new with tidymodels?",
+    "section": "What happened?",
+    "text": "What happened?\n\ntime_to_water &lt;- function(plant) {\n  if (!is.character(plant)) {\n    cli::cli_abort(\"{.arg plant} must be a string.\")\n  }\n  msg &lt;- paste(\"All good, the\", plant, \"doesn't need to be watered yet.\")\n  cat(paste0(msg, \"\\n\"))\n}\n\ntime_to_water(5)\n#&gt; Error in `time_to_water()`:\n#&gt; ! `plant` must be a string."
+  },
+  {
+    "objectID": "index.html#interlude-with-more-cli-options",
+    "href": "index.html#interlude-with-more-cli-options",
+    "title": "What’s new with tidymodels?",
+    "section": "Interlude with more cli options",
+    "text": "Interlude with more cli options\n\ntime_to_water &lt;- function(plant) {\n  if (!is.character(plant)) {\n    cli::cli_abort(\"{.arg plant} must be a string.\")\n  }\n  cli::cli_text(\"All good, the {plant} {?doesn't/don't} need to be watered yet.\")\n}\n\ntime_to_water(\"monstera\")\n#&gt; All good, the monstera doesn't need to be watered yet.\n\ntime_to_water(c(\"monstera\", \"that other plant\"))\n#&gt; All good, the monstera and that other plant don't need to be watered\n#&gt; yet.\n\nFor more see: ?cli::pluralization\n\n\ninterpolation\npluralization"
+  },
+  {
+    "objectID": "index.html#formatting-options-in-cli",
+    "href": "index.html#formatting-options-in-cli",
+    "title": "What’s new with tidymodels?",
+    "section": "Formatting options in cli",
+    "text": "Formatting options in cli\n\nlibrary(cli)\n\ncli_text(\"A piece of code: {.code sum(a) / length(a)}\")\n#&gt; A piece of code: `sum(a) / length(a)`\n\ncli_text(\"A class: {.cls lm}\")\n#&gt; A class: &lt;lm&gt;\n\ncli_text(\"A function name: {.fn cli_text}\")\n#&gt; A function name: `cli_text()`\n\nFor more see ?cli::`inline-markup`"
+  },
+  {
+    "objectID": "index.html#link-to-the-docs",
+    "href": "index.html#link-to-the-docs",
+    "title": "What’s new with tidymodels?",
+    "section": "Link to the docs",
+    "text": "Link to the docs\n\npredict.model_spec &lt;- function(object, ...) {\n  cli::cli_abort(\n    \"You must {.fun fit} your {.help [model specification](parsnip::model_spec)}\n     before you can use {.fun predict}.\"\n  )\n}\n\nlinear_reg() %&gt;% predict()\n#&gt; Error in `predict()`:\n#&gt; ! You must `fit()` your model specification\n#&gt;   (`?parsnip::model_spec()`) before you can use `predict()`."
+  },
+  {
+    "objectID": "index.html#where-did-it-happened",
+    "href": "index.html#where-did-it-happened",
+    "title": "What’s new with tidymodels?",
+    "section": "Where did it happened?",
+    "text": "Where did it happened?\n\ntime_to_water &lt;- function(plant) {\n  if (!is.character(plant)) {\n    cli::cli_abort(\"{.arg plant} must be a string.\")\n  }\n  cli::cli_text(\"All good, the {plant} {?doesn't/don't} need to be watered yet.\")\n}\n\nplant_care &lt;- function(plant) {\n  time_to_water(plant)\n  #time_to_repot(plant)\n}\n\nplant_care(5)\n#&gt; Error in `time_to_water()`:\n#&gt; ! `plant` must be a string."
+  },
+  {
+    "objectID": "index.html#where-did-it-happened-1",
+    "href": "index.html#where-did-it-happened-1",
+    "title": "What’s new with tidymodels?",
+    "section": "Where did it happened?",
+    "text": "Where did it happened?\n\ntime_to_water &lt;- function(plant, call = rlang::caller_env()) {\n  if (!is.character(plant)) {\n    cli::cli_abort(\"{.arg plant} must be a string.\", call = call)\n  }\n  cli::cli_text(\"All good, the {plant} {?doesn't/don't} need to be watered yet.\")\n}\n\nplant_care &lt;- function(plant) {\n  time_to_water(plant)\n  #time_to_repot(plant)\n}\n\nplant_care(5)\n#&gt; Error in `plant_care()`:\n#&gt; ! `plant` must be a string."
+  },
+  {
+    "objectID": "index.html#why-did-it-happen",
+    "href": "index.html#why-did-it-happen",
+    "title": "What’s new with tidymodels?",
+    "section": "Why did it happen?",
+    "text": "Why did it happen?\n\ntime_to_water &lt;- function(plant) {\n  if (!is.character(plant)) {\n    cli::cli_abort(\"{.arg plant} must be a string.\")\n  }\n  cli::cli_text(\"All good, the {plant} {?doesn't/don't} need to be watered yet.\")\n}\n\ntime_to_water(5)\n#&gt; Error in `time_to_water()`:\n#&gt; ! `plant` must be a string."
+  },
+  {
+    "objectID": "index.html#why-did-it-happen-1",
+    "href": "index.html#why-did-it-happen-1",
+    "title": "What’s new with tidymodels?",
+    "section": "Why did it happen?",
+    "text": "Why did it happen?\n\ntime_to_water &lt;- function(plant) {\n  if (!is.character(plant)) {\n    cli::cli_abort(\"{.arg plant} must be a string, not {.obj_type_friendly {plant}}.\")\n  }\n  cli::cli_text(\"All good, the {plant} {?doesn't/don't} need to be watered yet.\")\n}\n\ntime_to_water(5)\n#&gt; Error in `time_to_water()`:\n#&gt; ! `plant` must be a string, not a number.\n\n\n\n\nlm(mpg ~., mtcars) |&gt; time_to_water()\n#&gt; Error in `time_to_water()`:\n#&gt; ! `plant` must be a string, not a &lt;lm&gt; object."
+  },
+  {
+    "objectID": "index.html#how-to-fix-it-1",
+    "href": "index.html#how-to-fix-it-1",
+    "title": "What’s new with tidymodels?",
+    "section": "How to fix it?",
+    "text": "How to fix it?\n\ntime_to_water &lt;- function(plant) {\n\n  cli::cli_abort(\n    c(\n        \"It's time to water the {plant}.\",\n        i = \"Look for sad leaves to avoid watering too late.\"\n    )\n  )\n}\n\ntime_to_water(\"lily\")\n#&gt; Error in `time_to_water()`:\n#&gt; ! It's time to water the lily.\n#&gt; ℹ Look for sad leaves to avoid watering too late."
+  },
+  {
+    "objectID": "index.html#helpful-errors-revisited",
+    "href": "index.html#helpful-errors-revisited",
+    "title": "What’s new with tidymodels?",
+    "section": "Helpful errors, revisited",
+    "text": "Helpful errors, revisited\n\n\nWhat happened?\n→ Error message. cli has: styling, interpolation, pluralization, links\nWhere did it happen?\n→ Call. Thread it through.\nWhy did it happen?\n→ Provide not only what was supposed to happen but also what did happen.\nHow to fix it?\n→ Help with hints and links, in bulleted form.\n\n\n\nWhy: Make educated guesses, but don’t be Clippy."
+  }
+]
