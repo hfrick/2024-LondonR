@@ -1,0 +1,930 @@
+---
+title: "What's new with tidymodels?"
+subtitle: "LondonR 2024-11"
+author: "Hannah Frick, Posit"
+format:
+  revealjs: 
+    slide-number: true
+    show-slide-number: speaker
+    footer: <https://hfrick.github.io/2024-LondonR>
+    theme: [default, style.scss]
+    css: styles.css
+    highlight-style: a11y
+    width: 1280
+    height: 720
+knitr:
+  opts_chunk: 
+    echo: true
+    collapse: true
+    comment: "#>"
+---
+
+```{r}
+#| label: setup
+#| echo: false
+#| message: false
+#| warning: false
+library(tidymodels)
+
+options(width = 70)
+
+theme_set(theme_minimal(base_size = 20))
+```
+
+## `r emo::ji("wave")` Who am I?
+
+::: columns
+::: {.column width="25%"}
+:::
+
+::: columns
+::: {.column width="25%"}
+![](images/avatars/hannah.png) ![](images/avatars/empty.png)
+:::
+
+::: {.column width="25%"}
+![](images/avatars/empty.png) ![](images/avatars/empty.png)
+:::
+:::
+
+::: {.column width="25%"}
+:::
+:::
+
+------------------------------------------------------------------------
+
+## `r emo::ji("wave")` Who are we?
+
+::: columns
+::: {.column width="25%"}
+:::
+
+::: columns
+::: {.column width="25%"}
+![](images/avatars/hannah.png) ![](images/avatars/emil.png)
+:::
+
+::: {.column width="25%"}
+![](images/avatars/simon.png) ![](images/avatars/max.png)
+:::
+:::
+
+::: {.column width="25%"}
+:::
+:::
+
+---
+<!-- ## What is tidymodels? -->
+
+<br><br><br>
+
+::: {.r-fit-text}
+tidymodels is a framework for modelling and 
+
+machine learning using tidyverse principles.
+:::
+
+## What's new with tidymodels?
+
+<!-- TODO prettify "table of content" ? -->
+
+1. New and released
+2. New and in progress
+
+# New and released 
+
+## Time-to-event data
+
+Time-to-event data consists of two aspects: the time to and the event itself. We may or may not observe the event, leading to potentially censored observations. 
+
+Censored regression is now supported across the framework with various models and corresponding performance metrics.
+
+## Time-to-event data
+
+The introduction to time-to-event data and models:  
+[tidymodels for time-to-event data](https://www.youtube.com/watch?v=NhUGixMJk7U&list=PL9HYL-VRX0oSFkdF4fJeY63eGDvgofcbn&index=20) by yours truely at posit::conf(2024)
+
+The details of measuring performance for time-to-event models:  
+[Evaluation time-to-event models is hard](https://www.youtube.com/watch?v=cm34R5aYUQ4&list=PL9HYL-VRX0oSFkdF4fJeY63eGDvgofcbn&index=33) by Max at posit::conf(2024)
+
+## Fairness
+
+tidymodels includes metrics to support your thinking around fairness.  
+
+[Fair machine learning](https://www.youtube.com/watch?v=PPn3x2vqw-8&list=PL9HYL-VRX0oSFkdF4fJeY63eGDvgofcbn&index=24) by Simon at posit::conf(2024)
+
+## Prediction in databases
+
+The tidypredict package let's you calculate predictions from a parsnip model, in a database. 
+
+The new [orbital](https://orbital.tidymodels.org/) package let's you do that from a workflow, including workflows with a recipe. 
+
+[tidypredict with recipes](https://www.youtube.com/watch?v=Qnm1y0KPxVM&list=PL9HYL-VRX0oSFkdF4fJeY63eGDvgofcbn&index=26) by Emil at posit::conf(2024)
+
+
+
+# New and in progress
+
+# Post-processing
+
+# Post-processing 
+
+What you do after the model, to the model predictions
+
+## Deliveries data
+
+```{r}
+#| label: deliveries
+data(deliveries)
+
+deliveries
+```
+
+## Deliveries data
+
+```{r}
+#| label: deliveries_split
+# split into training and testing sets
+set.seed(1)
+delivery_split <- initial_split(deliveries)
+delivery_train <- training(delivery_split)
+delivery_test  <- testing(delivery_split)
+
+# resample the training set using 10-fold cross-validation
+set.seed(1)
+delivery_folds <- vfold_cv(delivery_train)
+```
+
+## A baaaad model
+
+```{r}
+#| label: bad-boost
+delivery_wflow <- workflow() %>%
+  add_formula(time_to_delivery ~ .) %>%
+  add_model(boost_tree(mode = "regression", trees = 3))
+```
+
+## A baaaad model
+
+```{r}
+#| label: resample-bad-boost
+set.seed(1)
+delivery_res <- fit_resamples(
+    delivery_wflow, 
+    delivery_folds, 
+    control = control_resamples(save_pred = TRUE)
+  )
+```
+
+## What is your metric measuring?
+
+```{r}
+#| label: metrics-bad-boost
+collect_metrics(delivery_res)
+```
+
+## But what about calibration?
+
+```{r}
+#| label: predictions-bad-boost
+
+library(probably)
+
+collect_predictions(delivery_res) %>%
+  cal_plot_regression(truth = time_to_delivery, estimate = .pred)
+```
+
+## Post-processing model predictions
+
+Why
+
+- Improve predictive performance
+- Better satisfy distributional limitations
+
+. . .
+
+How
+
+- Currently: via probably or dplyr
+- Coming: Include specification in workflow object
+
+## Meet tailor 👋
+
+The tailor package introduces tailor objects, which compose iterative adjustments to model predictions. 
+
+. . .
+
+tailor is to postprocessing as recipes is to preprocessing.
+
+## Meet tailor 👋
+
+<div style="width: 100%; max-width: 100%; overflow-x: auto;">
+
+| Tool | Applied to\... | Initialize with\... | Composes\... | Train with\... | Predict with\... |
+|------------|------------|------------|------------|------------|------------|
+| recipes | Training data | `recipe()` | `step_*()`s | `prep()` | `bake()` |
+| tailor | Model predictions | `tailor()` | `adjust_*()`ments | `fit()` | `predict()` |
+
+</div>
+
+<!-- ## tailor on its own -->
+
+
+
+## tailor with a workflow
+
+```{r}
+#| label: tailor-deliveries
+#| code-line-numbers: "1-4|6-7"
+
+library(tailor)
+
+delivery_tlr <- tailor() %>% 
+    adjust_numeric_calibration()
+
+delivery_wflow_improved <- delivery_wflow %>%
+  add_tailor(delivery_tlr)
+```
+
+## 
+
+```{r}
+#| label: resample-better-boost
+set.seed(1)
+delivery_res_improved <- fit_resamples(
+    delivery_wflow_improved, 
+    delivery_folds, 
+    control = control_resamples(save_pred = TRUE)
+  )
+```
+
+##
+
+```{r}
+#| label: predictios-better-boost
+collect_predictions(delivery_res_improved) %>%
+  cal_plot_regression(truth = time_to_delivery, estimate = .pred)
+```
+
+<!-- TODO maybe show the two calibration plots side-by-side -->
+
+<!-- TODO: go into the details of the calibration set? -->
+
+
+
+## Post-processing via tailor
+
+-   For probabilities: [calibration](https://tailor.tidymodels.org/reference/adjust_probability_calibration.html)
+-   For transformation of probabilities to hard class predictions: [thresholds](https://tailor.tidymodels.org/reference/adjust_probability_threshold.html), [equivocal zones](https://tailor.tidymodels.org/reference/adjust_equivocal_zone.html)
+-   For numeric outcomes: [calibration](https://tailor.tidymodels.org/reference/adjust_numeric_calibration.html), [range](https://tailor.tidymodels.org/reference/adjust_numeric_range.html)
+
+## Post-processing in tidymodels
+
+Implemented:
+
+- tailor
+- Support in workflows
+- Support via `tune::fit_resamples()`
+- Support via rsample for some resamples
+
+. . .
+
+To come:
+
+- Support via rsample for the rest of the resamples
+- Tuning parameters via tune
+
+# Feedback welcome
+
+Best via Github issues on [tidymodels/tailor](https://github.com/tidymodels/tailor/issues) `r fontawesome::fa("github")`
+
+
+
+
+
+# Sparse tibbles
+
+## Sparse data
+
+When creating indicators for categorical variables, tokenizing text, or with graph datasets, you can easily end up with a lot of variables -- and a lot of zeros within them.
+
+. . .
+
+The information in that data is rather _sparse_.  
+
+
+## Challenges
+
+This can be challenging in terms of memory and speed.
+
+. . .
+
+Address this via a different data representation.
+
+
+## Default: dense representation
+
+ <br> 
+
+::: {.r-fit-text}
+::: {.font-monospace}
+c(100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 42, 0, 0, 0)
+:::
+:::
+
+<br>
+
+Store all 25 values.
+
+
+## Sparse representation
+
+ <br> 
+
+::: {.r-fit-text}
+::: {.font-monospace}
+c([100]{.cranberry}, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, [42]{.cranberry}, 0, 0, 0)
+:::
+:::
+
+. . .
+
+ <br> 
+
+Only 5 values necessary:
+
+- 1 for the length: `25`
+- 2 for the locations of the non-zero values: `1`, `22`
+- 2 for the non-zero values: `100`, `42`
+
+
+## Sparsity in R
+
+The Matrix package implements sparse matrices and sparse vectors along with efficient matrix operations.
+
+```{r}
+#| label: Matrix
+
+library(Matrix)
+
+sparse_vec <- sparseVector(c(100, 42), i = c(1, 22), length = 25)
+sparse_vec
+```
+
+:::{.notes}
+make matrix, send to model fitting engine
+:::
+
+## Sparsity in tidymodels
+
+```{r}
+#| label: Matrix-tibble
+#| error: true
+
+tibble(y = 1:25, x = sparse_vec)
+```
+<!-- is.vector(sparse_vec) -->
+
+. . . 
+
+<br>
+
+::: {.r-stack}
+What are we doing, what are we not doing, and why?
+:::
+
+## Sparsity in tidymodels
+
+Goals:
+
+- Preserve existing sparsity across the framework
+- Make use of (i.e. add) sparsity where beneficial
+- Make things "easy", e.g., let you (and us) use dplyr verbs
+
+. . .
+
+➔ We want sparse vectors in a tibble.
+
+:::{.notes}
+- tibbles can traverse the framework
+- sparsity on a predictor level -> sparsity in vector
+- not Matrix but ALTREP
+:::
+
+## Welcome sparsevctrs
+
+![](images/sparsevctrs.png){.absolute top="120" left="440" width="400"} 
+
+:::{.notes}
+- pkg can be used on its own
+- not a Matrix replacement, no matrix operations
+- allows for "sparse tibbles", can convert those to Matrix for engines
+:::
+
+
+## Sparse tibbles in tidymodels
+
+- Implemented: 
+    - recipes: `recipe()`, `prep()`, and `bake()`
+    - parsnip: `fit_xy()` (based on engine) and `predict()`
+    - workflows: `fit()` (with a recipe) and `predict()`
+
+. . .
+
+- To come: recipe steps
+
+. . .
+
+- Maaaybe: formula interface for parsnip (via `fit()`) and workflows (via `add_formula()`)
+
+:::{.notes}
+Where this is really intersting: in preprocessing!
+:::
+
+
+# Feedback welcome
+
+For sparsevctrs itself: [r-lib/sparsevctrs](https://github.com/r-lib/sparsevctrs/issues) `r fontawesome::fa("github")`  
+
+For sparsity in context: the corresponding repository, e.g., [tidymodels/recipes](https://github.com/tidymodels/recipes/issues) `r fontawesome::fa("github")`
+
+
+
+
+
+## Books in progress
+
+- Max - Applied Machine Learning for Tabular Data: <https://aml4td.org/>
+- Emil - Feature Engineering A-Z: <https://feaz-book.com/>
+- Simon - Efficient Machine Learning with R: <https://emlwr.org/>
+
+## Where to get the news
+
+- Announcements on <https://www.tidyverse.org/blog/>
+
+- Detailed articles on <https://www.tidymodels.org/>
+
+![](images/tidymodels.png){.absolute top="300" left="840" width="300"} 
+
+
+
+# Appendix
+
+
+
+
+# Better errors
+
+## Jenny Bryan, rstudio::conf 2020 {visibility="hidden"}
+
+<br>
+
+```{r}
+#| label: closure-not-subsettable
+#| error: true
+dat <- data.frame(x = 1, y = 2)
+
+df$x
+
+cat("Perhaps you wanted `dat$x`?\n")
+```
+
+:::{.footer}
+<https://speakerdeck.com/jennybc/object-of-type-closure-is-not-subsettable>
+:::
+
+
+
+## When your recipe fails, previously
+
+```r
+library(recipes)
+
+data("ames", package = "modeldata")
+
+recipe(~., data = ames) |>
+  step_novel(Neighborhood, new_level = "Gilbert") |>
+  prep()
+#> Error in `prep()`:
+#> ! Columns already contain the new level: Neighborhood
+```
+
+:::{.footer}
+<https://github.com/tidymodels/recipes/pull/1069>
+:::
+
+## When your recipe fails, now
+
+```{r}
+#| label: recipes-which-step
+#| error: true
+#| code-line-numbers: "8-10"
+
+library(recipes)
+
+data("ames", package = "modeldata")
+
+recipe(~., data = ames) |>
+  step_novel(Neighborhood, new_level = "Gilbert") |>
+  prep()
+```
+
+:::{.footer}
+<https://github.com/tidymodels/recipes/pull/1069>
+:::
+
+# Upkeep: error edition
+
+:::{.notes}
+- upkeep: maintenace, pay down tech debt
+- a lot of small changes, adding up
+- show you tooling to help your users and reduce maintenance burden
+:::
+
+
+## What makes an error helpful?
+
+- What happened?
+- Where did it happen?
+- Why did it happen?
+- How to fix it?
+
+## What happened?
+
+```{r}
+#| label: error-ex-1
+#| error: true
+#| code-line-numbers: "|3,11"
+
+time_to_water <- function(plant) {
+  if (!is.character(plant)) {
+    rlang::abort("`plant` must be a string.")
+  }
+  msg <- paste("All good, the", plant, "doesn't need to be watered yet.")
+  cat(paste0(msg, "\n"))
+}
+
+time_to_water(5)
+```
+
+
+## What happened?
+
+```{r}
+#| label: error-ex-1-styling
+#| error: true
+#| code-line-numbers: "3,11|5-6"
+
+time_to_water <- function(plant) {
+  if (!is.character(plant)) {
+    cli::cli_abort("{.arg plant} must be a string.")
+  }
+  msg <- paste("All good, the", plant, "doesn't need to be watered yet.")
+  cat(paste0(msg, "\n"))
+}
+
+time_to_water(5)
+```
+
+
+## Interlude with more cli options
+
+```{r}
+#| label: cli
+#| message: true
+#| code-line-numbers: "5|5,8-9|5,11-13"
+
+time_to_water <- function(plant) {
+  if (!is.character(plant)) {
+    cli::cli_abort("{.arg plant} must be a string.")
+  }
+  cli::cli_text("All good, the {plant} {?doesn't/don't} need to be watered yet.")
+}
+
+time_to_water("monstera")
+
+time_to_water(c("monstera", "that other plant"))
+```
+
+For more see: [?cli::pluralization](https://cli.r-lib.org/articles/pluralization.html)
+
+
+:::{.notes}
+- interpolation
+- pluralization
+:::
+
+## Formatting options in cli
+
+```{r}
+#| label: cli-formatting-1
+#| message: true
+
+library(cli)
+
+cli_text("A piece of code: {.code sum(a) / length(a)}")
+
+cli_text("A class: {.cls lm}")
+
+cli_text("A function name: {.fn cli_text}")
+```
+
+For more see [?cli::\`inline-markup\`](https://cli.r-lib.org/reference/inline-markup.html)
+
+
+## Formatting options in cli {visibility="hidden"}
+
+`.fun` automatically creates links to the manual page of the function, provided the function name is in the `packagename::functionname` form:
+
+```{r}
+#| label: cli-formatting-fun
+#| message: true
+
+cli::cli_text("... see {.fun stats::lm} to learn more.")
+```
+
+## Formatting options in cli {visibility="hidden"}
+
+For a custom link text, use `.help` instead of `.fun`.
+
+```{r}
+#| label: cli-formatting-help
+#| message: true
+
+cli::cli_text("... see {.help [custom label](stats::lm)} to learn more.")
+
+cli::cli_text("... see {.help [custom label with extra styling of {.fun lm}](stats::lm)}
+  to learn more.")
+```
+
+## Link to the docs
+
+```{r}
+#| label: parsnip-predict-model-spec
+#| error: true
+#| code-line-numbers: "1-6|"
+
+predict.model_spec <- function(object, ...) {
+  cli::cli_abort(
+    "You must {.fun fit} your {.help [model specification](parsnip::model_spec)}
+     before you can use {.fun predict}."
+  )
+}
+
+linear_reg() %>% predict()
+```
+
+
+## Where did it happened?
+
+```{r}
+#| label: error-ex-2
+#| error: true
+#| code-line-numbers: "1-6|8-11|13-15"
+
+time_to_water <- function(plant) {
+  if (!is.character(plant)) {
+    cli::cli_abort("{.arg plant} must be a string.")
+  }
+  cli::cli_text("All good, the {plant} {?doesn't/don't} need to be watered yet.")
+}
+
+plant_care <- function(plant) {
+  time_to_water(plant)
+  #time_to_repot(plant)
+}
+
+plant_care(5)
+```
+
+## Where did it happened?
+
+```{r}
+#| label: error-ex-2-call
+#| error: true
+#| code-line-numbers: "1,3|8-9|13-14"
+
+time_to_water <- function(plant, call = rlang::caller_env()) {
+  if (!is.character(plant)) {
+    cli::cli_abort("{.arg plant} must be a string.", call = call)
+  }
+  cli::cli_text("All good, the {plant} {?doesn't/don't} need to be watered yet.")
+}
+
+plant_care <- function(plant) {
+  time_to_water(plant)
+  #time_to_repot(plant)
+}
+
+plant_care(5)
+```
+
+
+## Why did it happen?
+
+```{r}
+#| label: error-ex-1-again
+#| error: true
+
+time_to_water <- function(plant) {
+  if (!is.character(plant)) {
+    cli::cli_abort("{.arg plant} must be a string.")
+  }
+  cli::cli_text("All good, the {plant} {?doesn't/don't} need to be watered yet.")
+}
+
+time_to_water(5)
+```
+
+## Why did it happen?
+
+```{r}
+#| label: error-ex-1-type
+#| error: true
+#| code-line-numbers: "3,10"
+
+time_to_water <- function(plant) {
+  if (!is.character(plant)) {
+    cli::cli_abort("{.arg plant} must be a string, not {.obj_type_friendly {plant}}.")
+  }
+  cli::cli_text("All good, the {plant} {?doesn't/don't} need to be watered yet.")
+}
+
+time_to_water(5)
+```
+
+. . .
+
+<br>
+
+```{r}
+#| label: error-ex-lm
+#| error: true
+
+lm(mpg ~., mtcars) |> time_to_water()
+```
+
+## Why did it happen? {visibility="hidden"}
+
+```{r}
+#| label: arg-match-base
+#| error: true
+#| message: true
+
+time_to_water <- function(plant = c("monstera", "dieffenbachia")) {
+  match.arg(plant)
+  cli::cli_text("All good, the {plant} {?doesn't/don't} need to be watered yet.")
+}
+
+time_to_water("pothos")
+
+time_to_water("monster")
+```
+
+
+## How to fix it? {visibility="hidden"}
+
+```{r}
+#| label: arg-match-rlang
+#| error: true
+
+time_to_water <- function(plant = c("monstera", "dieffenbachia")) {
+  rlang::arg_match(plant)
+  cli::cli_text("All good, the {plant} {?doesn't/don't} need to be watered yet.")
+}
+
+time_to_water("monster")
+```
+
+## How to fix it?
+
+```{r}
+#| label: bulleted-error
+#| error: true
+
+time_to_water <- function(plant) {
+
+  cli::cli_abort(
+    c(
+        "It's time to water the {plant}.",
+        i = "Look for sad leaves to avoid watering too late."
+    )
+  )
+}
+
+time_to_water("lily")
+```
+
+
+
+## Helpful errors, revisited
+
+::: {.incremental}
+- What happened?  
+    → Error message. cli has: styling, interpolation, pluralization, links
+- Where did it happen?  
+    → Call. Thread it through.
+- Why did it happen?  
+    → Provide not only what was supposed to happen but also what _did_ happen. 
+- How to fix it?  
+    → Help with hints and links, in bulleted form.
+:::
+
+:::{.notes}
+Why: Make educated guesses, but don't be Clippy.
+:::
+
+
+
+## Interpolation in dials {visibility="hidden"}
+
+<!-- TODO find home for the dials example -->
+
+```{r}
+#| label: update-parameters-before
+#| eval: false
+
+update.parameters <- function(object, ...) {
+  # <some other code>
+
+  in_set <- nms %in% object$id
+  if (!all(in_set)) {
+    msg <- paste0("'", nms[!in_set], "'", collapse = ", ")
+    msg <- paste(
+      "At least one parameter does not match any id's in the set:",
+      msg
+    )
+    rlang::abort(msg)
+  }
+
+  # <some more code>
+}
+```
+
+## Interpolation in dials {visibility="hidden"}
+
+```{r}
+#| label: update-parameters-after
+#| eval: false
+
+update.parameters <- function(object, ...) {
+  # <some other code>
+
+  in_set <- nms %in% object$id
+  if (!all(in_set)) {
+    offenders <- nms[!in_set]
+    cli::cli_abort(
+      "At least one parameter does not match any id's in the set:
+      {offenders}."
+    )
+  }
+
+  # <some more code>
+}
+```
+
+
+## Giving aaall the pointers in workflowsets {visibility="hidden"}
+
+<!-- TODO make this quarto live? -->
+
+```{r}
+#| label: predict-workflow_set-show
+#| eval: false
+predict(workflow_set_obj)
+```
+
+```{r}
+#| label: predict-workflow_set-eval
+#| echo: false
+#| error: true
+
+workflow_set_obj <- structure(1, class = "workflow_set")
+predict(workflow_set_obj)
+```
+
+
+## Giving aaall the pointers in workflowsets {visibility="hidden"}
+
+```{r}
+#| label: predict-workflow_set-definition
+#| eval: false
+predict.workflow_set <- function(object, ...) {
+  cli::cli_abort(c(
+    "`predict()` is not well-defined for workflow sets.",
+    "i" = "To predict with the optimal model configuration from a workflow set, 
+           ensure that the workflow set was fitted with the 
+           {.help [control option](workflowsets::option_add)} 
+           {.help [{.code save_workflow = TRUE}](tune::control_grid)}, run 
+           {.help [{.fun fit_best}](tune::fit_best)}, and then predict using 
+           {.help [{.fun predict}](workflows::predict.workflow)} on its output.",
+    "i" = "To collect predictions from a workflow set, ensure that 
+           <more help, similar to above>."
+  ))
+}
+```
+
+# More examples: {visibility="hidden"}
+<https://emilhvitfeldt.com/talk/2024-07-03-user-cli-tidymodels/>
+
